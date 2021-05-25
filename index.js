@@ -38,17 +38,14 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
     .example('$0 update -s 1hDR2paRr6BxX9LDzSZEmA__Y3byrUgtOOGz9BFC-sVg -n 2 -f')
     .argv;
 
-const main = () => {
-    update(argv.spreadsheet, {
-        sheetNumber: argv.sheet,
-        shouldForceUpdate: argv.forceUpdate,
-        outputDir: argv.outputDir,
-        isVerbose: argv.verbose
-    }).then(message => {
-        console.info(message);
-    });
-};
+update(argv.spreadsheet, {
+    sheetNumber: argv.sheet,
+    shouldForceUpdate: argv.forceUpdate,
+    outputDir: argv.outputDir,
+    isVerbose: argv.verbose
+}).then(message => {
+    console.info(message);
+});
 
-module.exports = main;
 
 
