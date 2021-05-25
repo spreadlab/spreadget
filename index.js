@@ -10,26 +10,31 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
             return yargs.option('spreadsheet', {
                 alias: 's',
                 type: 'string',
-                describe: 'Google Spreadsheet id'
+                desc: 'Google Spreadsheet id'
             }).option('sheet', {
                 alias: 'n',
                 default: 1,
                 type: 'number',
-                describe: 'Google Spreadsheet sheet number'
+                desc: 'Google Spreadsheet sheet number'
             }).option('output-dir', {
                 alias: 'd',
                 type: 'string',
-                describe: 'Output directory for files',
+                desc: 'Output directory for files',
                 default: './_posts'
             }).option('force-update', {
                 alias: 'f',
                 type: 'boolean',
-                describe: 'Forces update regardless of versions',
+                desc: 'Forces update regardless of versions',
                 default: false
             }).option('verbose', {
                 alias: 'v',
                 type: 'boolean',
-                description: 'Run with verbose logging'
+                desc: 'Run with verbose logging'
+            }).option('adapter', {
+                alias: 'a',
+                type: 'string',
+                default: 'posts',
+                choices: ['posts']
             })
         }
     )

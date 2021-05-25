@@ -6,41 +6,12 @@ const TurndownService = require('turndown');
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 global.DOMParser = new JSDOM().window.DOMParser;
-
-const lineToPost = line => {
-    return JSON.parse(JSON.stringify({
-        category: line.category,
-        description: line.description,
-        document: line.document,
-        image: line.image && line.image.src ? {
-            src: line.image.src
-        } : undefined,
-        published: line.published || true,
-        slug: line.slug,
-        tags: line.tags ? line.tags.split(',').map(tag => tag.trim()) : undefined,
-        title: line.title,
-        version: line.version
-
-    }));
-};
-const postToFrontmatterData = (post, markdown) => {
-    return JSON.parse(JSON.stringify({
-        category: post.category,
-        description: post.description,
-        image: post.image,
-        published: post.published,
-        slug: post.slug,
-        tags: post.tags,
-        title: post.title || markdown.title,
-        version: post.version
-    }));
-};
+const postsAdapter = require("./adapters/posts");
 
 const getPostsFromSpreadsheet = (spreadsheetId, sheetNumber) => {
     return axios.get(Spreadparser.getSpreadsheetUrl(spreadsheetId, sheetNumber))
         .then(response => response.data)
         .then(data => Spreadparser.parse(data).data)
-        .then(lines => lines.map(lineToPost))
         .catch(error => console.log(error));
 };
 
@@ -117,7 +88,7 @@ const writePostsToFiles = async (originalPosts, postsToUpdate, outputDir) => {
     await postsToUpdate.forEach(async post => {
         const markdown = await getMarkdownFromDocs(post);
         const fileName = `${outputDir}/${post.slug}.md`;
-        await writeFile(fileName, matter.stringify(markdown.content, postToFrontmatterData(post, markdown)));
+        await writeFile(fileName, matter.stringify(markdown.content, postsAdapter(post, markdown)));
         await writeFile(JSONPath, JSON.stringify(Object.assign(originalPosts, postsToUpdate), null, 2));
     });
 };
