@@ -1,5 +1,8 @@
-const postToFrontmatterData = (post, markdown) => {
-    return {
+const docsToMarkdown = require("../utils/docsToMarkdown");
+
+const postToFrontmatterData = async (post) => {
+    const content = await docsToMarkdown(post);
+    const data = {
         category: post.category,
         description: post.description,
         document: post.document,
@@ -9,9 +12,10 @@ const postToFrontmatterData = (post, markdown) => {
         published: post.published,
         slug: post.slug,
         tags: post.tags ? post.tags.split(',').map(tag => tag.trim()) : undefined,
-        title: post.title || markdown.title,
+        title: post.title,
         version: post.version
     };
+    return {data, content};
 };
 
 module.exports = postToFrontmatterData;
