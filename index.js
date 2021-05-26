@@ -34,7 +34,7 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
                 alias: 'a',
                 type: 'string',
                 default: 'posts',
-                choices: ['posts']
+                choices: ['posts', 'categories']
             })
         }
     )
@@ -47,7 +47,8 @@ update(argv.spreadsheet, {
     sheetNumber: argv.sheet,
     shouldForceUpdate: argv.forceUpdate,
     outputDir: argv.outputDir,
-    isVerbose: argv.verbose
+    isVerbose: argv.verbose,
+    adapterName: argv.adapter
 }).then(message => {
     console.info(message);
 });

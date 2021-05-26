@@ -1,6 +1,6 @@
 const docsToMarkdown = require("../utils/docsToMarkdown");
 
-const postToFrontmatterData = async (post) => {
+const postsAdapter = async (post) => {
     const content = await docsToMarkdown(post);
     const data = {
         category: post.category,
@@ -17,4 +17,4 @@ const postToFrontmatterData = async (post) => {
     return {data, content};
 };
 
-module.exports = postToFrontmatterData;
+module.exports = postsAdapter;

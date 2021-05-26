@@ -3,6 +3,7 @@ const axios = require('axios').default;
 const fs = require('fs');
 const matter = require('gray-matter');
 const postsAdapter = require('./adapters/posts');
+const categoriesAdapter = require('./adapters/categories');
 
 const getPostsFromSpreadsheet = (spreadsheetId, sheetNumber) => {
     return axios.get(Spreadparser.getSpreadsheetUrl(spreadsheetId, sheetNumber))
@@ -45,11 +46,16 @@ const filterPostsToUpdate = (originalPosts, newPosts, shouldForceUpdate) => {
     });
 };
 
-const writePostsToFiles = async (originalPosts, postsToUpdate, outputDir) => {
+const writePostsToFiles = async (originalPosts, postsToUpdate, outputDir, adapterName) => {
     const JSONPath = `${outputDir}/data.json`;
 
+    const adapter = {
+        'posts': postsAdapter,
+        'categories': categoriesAdapter
+    }[adapterName];
+
     await postsToUpdate.forEach(async post => {
-        const {data, content} = await postsAdapter(post);
+        const {data, content} = await adapter(post);
         const fileName = `${outputDir}/${post.slug}.md`;
         await writeFile(fileName, matter.stringify(content.content, JSON.parse(JSON.stringify(data))));
         await writeFile(JSONPath, JSON.stringify(Object.assign(originalPosts, postsToUpdate), null, 2));
@@ -63,7 +69,7 @@ async function update(spreadsheetId, options = {}) {
     const postsFromSpreadsheet = await getPostsFromSpreadsheet(spreadsheetId, options.sheetNumber);
     const postsFromJSON = await getPostsFromJSON(options.outputDir);
     const postsToUpdate = filterPostsToUpdate(postsFromJSON, postsFromSpreadsheet, options.shouldForceUpdate );
-    await writePostsToFiles(postsFromJSON, postsToUpdate, options.outputDir);
+    await writePostsToFiles(postsFromJSON, postsToUpdate, options.outputDir, options.adapterName);
     return `${postsToUpdate.length} posts updated.`;
 }
 
