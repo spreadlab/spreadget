@@ -57,7 +57,7 @@ const writePostsToFiles = async (originalPosts, postsToUpdate, outputDir, adapte
     await postsToUpdate.forEach(async post => {
         const {data, content} = await adapter(post);
         const fileName = `${outputDir}/${post.slug}.md`;
-        await writeFile(fileName, matter.stringify(content.content, JSON.parse(JSON.stringify(data))));
+        await writeFile(fileName, matter.stringify(content, JSON.parse(JSON.stringify(data))));
         await writeFile(JSONPath, JSON.stringify(Object.assign(originalPosts, postsToUpdate), null, 2));
     });
 };

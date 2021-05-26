@@ -1,7 +1,7 @@
 const docsToMarkdown = require("../utils/docsToMarkdown");
 
 const postsAdapter = async (post) => {
-    const content = await docsToMarkdown(post);
+    const markdown = await docsToMarkdown(post) || {};
     const data = {
         category: post.category,
         description: post.description,
@@ -11,10 +11,10 @@ const postsAdapter = async (post) => {
         published: post.published,
         slug: post.slug,
         tags: post.tags ? post.tags.split(',').map(tag => tag.trim()) : undefined,
-        title: post.title,
+        title: post.title || markdown.title,
         version: post.version
     };
-    return {data, content};
+    return {data, content: markdown.content };
 };
 
 module.exports = postsAdapter;
