@@ -5,7 +5,6 @@ const postToFrontmatterData = async (post) => {
     const data = {
         category: post.category,
         description: post.description,
-        document: post.document,
         image: post.image && post.image.src ? {
             src: post.image.src
         } : undefined,
