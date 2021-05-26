@@ -1,6 +1,6 @@
 {
   "name": "spreadget",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Command line interface (CLI) for update local files using Google Spreadsheet data",
   "main": "index.js",
   "repository": "git@github.com:spreadlab/spreadget.git",
